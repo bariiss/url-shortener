@@ -29,6 +29,7 @@ jobs:
   build:
     name: Build and Push Multi-Arch URL Shortener Image
     runs-on: [self-hosted]
+    if: contains(github.event.head_commit.message, '#build')
     steps:
       - name: Check out code
         uses: actions/checkout@v2
