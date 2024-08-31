@@ -1,6 +1,6 @@
 # ----------------- First stage -----------------
-# Go version: go1.23
-FROM --platform=$BUILDPLATFORM golang:latest AS build
+# Go version: go1.22.2
+FROM --platform=$BUILDPLATFORM golang:1.22.2 AS build
 # Set the upx version
 ARG upx_version=4.2.4
 ARG TARGETARCH
