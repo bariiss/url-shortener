@@ -20,6 +20,9 @@ The project uses a `.env` file to manage environment variables. Make sure to set
 APP_PORT=8080
 EXT_PORT=8080
 REDIS_ADDR=redis:6379
+REDIS_ACTIVE=false # Set to true to enable Redis
+```
+```
 ```
 
 ### .dockerignore
@@ -41,7 +44,7 @@ The `Dockerfile` is configured to create a minimal image for the Go application.
 3. Creates a minimal scratch image with only the necessary components
 
 Key steps in the Dockerfile:
-- Uses `golang:1.23-bookworm` as the base image for building
+- Uses `golang:1.21-bookworm` as the base image for building
 - Installs UPX for binary compression
 - Copies and builds the Go application
 - Creates a minimal scratch image with the compiled binary and necessary static files
