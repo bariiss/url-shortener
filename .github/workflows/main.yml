@@ -28,7 +28,7 @@ on:
 jobs:
   build:
     name: Build and Push Multi-Arch URL Shortener Image
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
