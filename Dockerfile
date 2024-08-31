@@ -19,7 +19,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends xz-utils && \
   apt-get remove -y xz-utils && \
   rm -rf /var/lib/apt/lists/*
 
-# Set the current working directory inside the containers
 WORKDIR /app
 
 # Copy go mod and sum files
@@ -43,7 +42,6 @@ RUN upx --ultra-brute -qq url-shortener && upx -t url-shortener
 # Create a minimal image
 FROM scratch
 
-# Set the current working directory inside the containers
 WORKDIR /app
 
 # Copy the binary from the build container
