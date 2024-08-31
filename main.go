@@ -1,11 +1,12 @@
 package main
 
 func main() {
-	loadEnv()
-	initRedis()
+    showWelcomeMessage()
+    loadEnv()
+    initRedis()
 
-	engine := initTemplateEngine()
-	app := initFiberApp(engine)
+    engine := initTemplateEngine()
+    app := initFiberApp(engine)
 
-	startServer(app)
+    startServer(app)
 }
