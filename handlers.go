@@ -94,8 +94,12 @@ func shortenHandler(c *fiber.Ctx) error {
         return c.Status(fiber.StatusInternalServerError).SendString("Error storing URL")
     }
 
+    fullShortURL := fmt.Sprintf("%s/r/%s", c.BaseURL(), shortURL)
     log.Printf("Stored URL: %s -> %s", shortURL, originalURL)
-    response := fmt.Sprintf(`<p>Shortened URL: <a href="/r/%s">%s</a></p>`, shortURL, shortURL)
+    response := fmt.Sprintf(`
+        <p>Shortened URL: <a href="%s" target="_blank">%s</a>
+        <span class="copy-icon" onclick="copyToClipboard('%s')">📋</span></p>
+    `, fullShortURL, fullShortURL, fullShortURL)
     return c.SendString(response)
 }
 

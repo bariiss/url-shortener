@@ -2,14 +2,62 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin-top: 70px;
+    background-color: black;
+    color: #39FF14; /* Fosforlu yeşil */
 }
 
 input {
     padding: 10px;
     font-size: 16px;
+    background-color: black;
+    color: #39FF14;
+    border: 2px solid #39FF14;
+    width: 70%; /* Genişliği %70 olarak ayarladık */
 }
 
 button {
     padding: 10px 20px;
     font-size: 16px;
+    background-color: #39FF14;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #28a745; /* Koyu yeşil */
+    color: white;
+}
+
+a {
+    color: #28a745; /* Fosforlu yeşilin koyu tonu */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.copy-icon {
+    margin-left: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    vertical-align: middle; /* İkonu metinle hizalamak için */
+    color: #39FF14; /* İkon rengi fosforlu yeşil */
+}
+
+.copy-icon:hover {
+    color: #28a745; /* İkon üzerine gelindiğinde renk değişimi */
+}
+
+#tooltip {
+    display: none; /* Başlangıçta tooltip gizli olacak */
+    margin-top: 10px;
+    font-size: 16px;
+    color: #28a745; /* Tooltip rengi */
 }

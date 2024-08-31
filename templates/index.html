@@ -14,7 +14,25 @@
         </form>
 
         <div id="result"></div>
+        <div id="tooltip">Copied to clipboard!</div> <!-- Tooltip buraya eklendi -->
 
         <script src="https://unpkg.com/htmx.org"></script>
+        <script>
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showTooltip(); // Kopyalama başarılı olunca tooltip göster
+                }, function(err) {
+                    console.error('Could not copy text: ', err);
+                });
+            }
+
+            function showTooltip() {
+                var tooltip = document.getElementById("tooltip");
+                tooltip.style.display = "block";
+                setTimeout(function() {
+                    tooltip.style.display = "none";
+                }, 5000); // 5 saniye sonra tooltip gizlenecek
+            }
+        </script>
     </body>
 </html>
