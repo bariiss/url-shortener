@@ -42,7 +42,6 @@ RUN upx --ultra-brute -qq url-shortener && upx -t url-shortener
 # Create a minimal image
 FROM scratch
 LABEL org.opencontainers.image.source="https://github.com/bariiss/url-shortener"
-LABEL org.opencontainers.image.description="This Docker image contains a URL shortener service built with Go. It provides an API to shorten URLs and redirect them to their original destinations."
 
 WORKDIR /app
 
