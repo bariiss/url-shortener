@@ -1,6 +1,6 @@
 module github.com/bariiss/url-shortener
 
-go 1.23
+go 1.22
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.5

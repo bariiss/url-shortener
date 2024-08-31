@@ -1,6 +1,6 @@
 # ----------------- First stage -----------------
-# Go version: go1.23
-FROM golang:1.23-bookworm AS build
+# Go version: go1.22
+FROM golang:1.22-bookworm AS build
 
 # Set the upx version
 ARG upx_version=4.2.4
