@@ -1,0 +1,6 @@
+docker-compose.yml
+Dockerfile
+.gitignore
+.dockerignore
+.git
+redisdata/
