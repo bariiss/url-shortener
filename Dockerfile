@@ -1,5 +1,3 @@
-# ----------------- First stage -----------------
-# Go version: go1.21
 FROM golang:1.21-bookworm AS build
 
 # Set the upx version
@@ -36,9 +34,7 @@ RUN CGO_ENABLED=0 GOARCH=$TARGETARCH GOOS=linux go build -o url-shortener -a -ld
 
 # Compress the binary
 RUN upx --ultra-brute -qq url-shortener && upx -t url-shortener
-# ----------------- End of the first stage -----------------
 
-# ----------------- Second stage -----------------
 # Create a minimal image
 FROM scratch
 LABEL org.opencontainers.image.source="https://github.com/bariiss/url-shortener"
@@ -59,4 +55,3 @@ COPY .env /app/.env
 
 # Copy the configuration file
 ENTRYPOINT ["/app/url-shortener"]
-# ----------------- End of the second stage -----------------
