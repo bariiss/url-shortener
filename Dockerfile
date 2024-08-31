@@ -1,4 +1,4 @@
-FROM golang:1.23-bookworm AS build
+FROM golang:1.23.0-bookworm AS build
 
 # Set the upx version
 ARG upx_version=4.2.4

@@ -44,7 +44,7 @@ The `Dockerfile` is configured to create a minimal image for the Go application.
 3. Creates a minimal scratch image with only the necessary components
 
 Key steps in the Dockerfile:
-- Uses `golang:1.23-bookworm` as the base image for building
+- Uses `golang:1.23.0-bookworm` as the base image for building
 - Installs UPX for binary compression
 - Copies and builds the Go application
 - Creates a minimal scratch image with the compiled binary and necessary static files
