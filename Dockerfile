@@ -41,6 +41,7 @@ RUN upx --ultra-brute -qq url-shortener && upx -t url-shortener
 # ----------------- Second stage -----------------
 # Create a minimal image
 FROM scratch
+LABEL org.opencontainers.image.source="https://github.com/bariiss/url-shortener"
 
 WORKDIR /app
 
