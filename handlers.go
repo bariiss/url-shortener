@@ -16,9 +16,11 @@ import (
 )
 
 var (
-	rdb *redis.Client
-	ctx = context.Background()
-	mu  sync.RWMutex
+	rdb           *redis.Client
+	ctx           = context.Background()
+	mu            sync.RWMutex
+	redisActive   bool
+	memoryStorage map[string]string
 )
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -27,16 +29,23 @@ func loadEnv() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("Error loading .env file")
 	}
+	redisActive = os.Getenv("REDIS_ACTIVE") == "true"
 }
 
 func initRedis() {
-	redisAddr := os.Getenv("REDIS_ADDR")
-	rdb = redis.NewClient(&redis.Options{
-		Addr: redisAddr,
-	})
+	if redisActive {
+		redisAddr := os.Getenv("REDIS_ADDR")
+		rdb = redis.NewClient(&redis.Options{
+			Addr: redisAddr,
+		})
 
-	if _, err := rdb.Ping(ctx).Result(); err != nil {
-		log.Fatalf("Error connecting to Redis: %v", err)
+		if _, err := rdb.Ping(ctx).Result(); err != nil {
+			log.Fatalf("Error connecting to Redis: %v", err)
+		}
+		log.Println("Connected to Redis")
+	} else {
+		memoryStorage = make(map[string]string)
+		log.Println("Redis is not active. Using in-memory storage.")
 	}
 }
 
@@ -70,11 +79,13 @@ func indexHandler(c *fiber.Ctx) error {
 func shortenHandler(c *fiber.Ctx) error {
 	originalURL := c.FormValue("url")
 	shortURL := generateShortURL()
+
 	err := setURL(shortURL, originalURL)
 	if err != nil {
 		log.Printf("Error storing URL: %v", err)
 		return c.Status(fiber.StatusInternalServerError).SendString("Error storing URL")
 	}
+
 	log.Printf("Stored URL: %s -> %s", shortURL, originalURL)
 	response := fmt.Sprintf(`<p>Shortened URL: <a href="/r/%s">%s</a></p>`, shortURL, shortURL)
 	return c.SendString(response)
@@ -105,9 +116,26 @@ func generateShortURL() string {
 }
 
 func setURL(shortURL, originalURL string) error {
-	return rdb.Set(ctx, shortURL, originalURL, 0).Err()
+	if redisActive {
+		return rdb.Set(ctx, shortURL, originalURL, 0).Err()
+	} else {
+		mu.Lock()
+		defer mu.Unlock()
+		memoryStorage[shortURL] = originalURL
+		return nil
+	}
 }
 
 func getURL(shortURL string) (string, error) {
-	return rdb.Get(ctx, shortURL).Result()
+	if redisActive {
+		return rdb.Get(ctx, shortURL).Result()
+	} else {
+		mu.RLock()
+		defer mu.RUnlock()
+		originalURL, exists := memoryStorage[shortURL]
+		if !exists {
+			return "", fmt.Errorf("URL not found")
+		}
+		return originalURL, nil
+	}
 }
