@@ -3,36 +3,38 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Link Shortener</title>
+        <title>Bozkurt URL Shortener</title>
         <link rel="stylesheet" href="/static/css/style.css" />
     </head>
     <body>
-        <h1>Link Shortener</h1>
+        <img src="/static/img/bozkurt.png" alt="Bozkurt Logo">
         <form hx-post="/shorten" hx-target="#result" hx-swap="innerHTML">
             <input type="text" name="url" placeholder="Enter URL" required />
             <button type="submit">Shorten</button>
         </form>
-
-        <div id="result"></div>
-        <div id="tooltip">Copied to clipboard!</div> <!-- Tooltip buraya eklendi -->
-
+        <div id="result" style="display: none;"></div>
+        <div id="tooltip">Copied to clipboard!</div>
         <script src="https://unpkg.com/htmx.org"></script>
         <script>
             function copyToClipboard(text) {
                 navigator.clipboard.writeText(text).then(function() {
-                    showTooltip(); // Kopyalama başarılı olunca tooltip göster
+                    showTooltip();
                 }, function(err) {
                     console.error('Could not copy text: ', err);
                 });
             }
-
             function showTooltip() {
                 var tooltip = document.getElementById("tooltip");
                 tooltip.style.display = "block";
                 setTimeout(function() {
                     tooltip.style.display = "none";
-                }, 5000); // 5 saniye sonra tooltip gizlenecek
+                }, 5000);
             }
+            document.body.addEventListener('htmx:afterSwap', function(event) {
+                if (event.detail.target.id === 'result') {
+                    event.detail.target.style.display = 'inline-block';
+                }
+            });
         </script>
     </body>
 </html>
