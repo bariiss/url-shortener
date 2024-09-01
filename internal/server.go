@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -63,7 +64,11 @@ func initFiberApp(config *AppConfig) *fiber.App {
 			return c.IP()
 		},
 		LimitReached: func(c *fiber.Ctx) error {
-			return c.SendString("<p>Too many requests. Please try again later.</p>")
+			clientIP := c.IP()
+			message := fmt.Sprintf(`
+				<div>Too many requests from IP: <strong>%s</strong>. Please try again later.</div>
+			`, clientIP)
+			return c.Status(fiber.StatusTooManyRequests).SendString(message)
 		},
 	}), shortenHandler)
 
@@ -80,6 +85,14 @@ func indexHandler(c *fiber.Ctx) error {
 
 func shortenHandler(c *fiber.Ctx) error {
 	originalURL := c.FormValue("url")
+	if originalURL == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("URL cannot be empty")
+	}
+
+	if !strings.HasPrefix(originalURL, "http://") && !strings.HasPrefix(originalURL, "https://") {
+		originalURL = "https://" + originalURL
+	}
+
 	shortURL := generateShortURL()
 
 	err := setURL(shortURL, originalURL)
@@ -91,8 +104,8 @@ func shortenHandler(c *fiber.Ctx) error {
 	fullShortURL := fmt.Sprintf("%s/r/%s", c.BaseURL(), shortURL)
 	log.Printf("Stored URL: %s -> %s", shortURL, originalURL)
 	response := fmt.Sprintf(`
-        <p>Shortened URL: <a href="%s" target="_blank">%s</a>
-        <span class="copy-icon" onclick="copyToClipboard('%s')">📋</span></p>
+        Shortened URL: <a href="%s" target="_blank">%s</a>
+        <span class="copy-icon" onclick="copyToClipboard('%s')">📋</span>
     `, fullShortURL, fullShortURL, fullShortURL)
 	return c.SendString(response)
 }

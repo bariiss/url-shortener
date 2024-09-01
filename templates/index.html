@@ -4,35 +4,122 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Bozkurt URL Shortener</title>
+        <link
+            href="/static/css/bootstrap/5.3.3/bootstrap.min.css"
+            rel="stylesheet"
+        />
         <link rel="stylesheet" href="/static/css/style.css" />
     </head>
-    <body>
-        <img src="/static/img/bozkurt.png" alt="Bozkurt Logo">
-        <form hx-post="/shorten" hx-target="#result" hx-swap="innerHTML">
-            <input type="text" name="url" placeholder="Enter URL" required />
-            <button type="submit">Shorten</button>
-        </form>
-        <div id="result" style="display: none;"></div>
-        <div id="tooltip">Copied to clipboard!</div>
+    <body class="text-center bg-dark">
+        <div class="container mt-5">
+            <img
+                src="/static/img/bozkurt.png"
+                alt="Bozkurt Logo"
+                class="img-fluid mb-4"
+                style="max-width: 10%"
+            />
+            <form
+                class="mb-3"
+                hx-post="/shorten"
+                hx-target="#result"
+                hx-target-429="#too-many-request"
+                hx-swap="innerHTML"
+            >
+                <div class="input-group mb-3">
+                    <input
+                        type="text"
+                        name="url"
+                        class="form-control"
+                        placeholder="Enter URL"
+                        required
+                    />
+                    <button type="submit" class="btn btn-success">
+                        Shorten
+                    </button>
+                </div>
+            </form>
+            <div id="result" class="alert alert-dark d-none"></div>
+            <div
+                id="too-many-request"
+                class="alert alert-danger d-none"
+                role="alert"
+            >
+                <h4 class="alert-heading">Ops!</h4>
+                <p id="too-many-request-message">
+                    Too many requests have been made from your IP address.
+                    Please try again later.
+                </p>
+            </div>
+            <div id="tooltip" class="alert alert-success d-none">
+                Copied to clipboard!
+            </div>
+            <div id="not-found" class="alert alert-danger d-none">
+                URL not found!
+            </div>
+        </div>
         <script src="https://unpkg.com/htmx.org"></script>
         <script>
             function copyToClipboard(text) {
-                navigator.clipboard.writeText(text).then(function() {
-                    showTooltip();
-                }, function(err) {
-                    console.error('Could not copy text: ', err);
-                });
+                navigator.clipboard.writeText(text).then(
+                    function () {
+                        showTooltip();
+                    },
+                    function (err) {
+                        console.error("Could not copy text: ", err);
+                    },
+                );
             }
+
             function showTooltip() {
                 var tooltip = document.getElementById("tooltip");
-                tooltip.style.display = "block";
-                setTimeout(function() {
-                    tooltip.style.display = "none";
+                tooltip.classList.remove("d-none");
+                setTimeout(function () {
+                    tooltip.classList.add("d-none");
                 }, 5000);
             }
-            document.body.addEventListener('htmx:afterSwap', function(event) {
-                if (event.detail.target.id === 'result') {
-                    event.detail.target.style.display = 'inline-block';
+
+            function showAlert(alertId, message) {
+                var alertElement = document.getElementById(alertId);
+                if (message) {
+                    alertElement.innerHTML = message;
+                }
+                alertElement.classList.remove("d-none");
+            }
+
+            function hideAlert(alertId) {
+                var alertElement = document.getElementById(alertId);
+                alertElement.classList.add("d-none");
+            }
+
+            document.body.addEventListener(
+                "htmx:afterRequest",
+                function (event) {
+                    hideAlert("result");
+                    hideAlert("too-many-request");
+                    hideAlert("not-found");
+
+                    if (event.detail.xhr.status === 404) {
+                        showAlert("not-found");
+                    } else if (event.detail.xhr.status === 429) {
+                        showAlert(
+                            "too-many-request",
+                            event.detail.xhr.responseText,
+                        );
+                    } else if (event.detail.xhr.status === 200) {
+                        showAlert("result");
+                    } else if (event.detail.xhr.status === 0) {
+                        // Handle network errors or unreachable API
+                        showAlert(
+                            "not-found",
+                            "Endpoint could not be reached. Please try again later.",
+                        );
+                    }
+                },
+            );
+
+            document.body.addEventListener("htmx:afterSwap", function (event) {
+                if (event.detail.target.id === "result") {
+                    showAlert("result");
                 }
             });
         </script>
