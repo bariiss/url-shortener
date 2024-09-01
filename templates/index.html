@@ -10,43 +10,51 @@
         />
         <link rel="stylesheet" href="/static/css/style.css" />
     </head>
-    <body class="text-center bg-dark">
-        <div class="container mt-5">
-            <div id="banner" class="mb-5"></div>
-            <form
-                class="mb-3"
-                hx-post="/shorten"
-                hx-target="#result"
-                hx-target-429="#too-many-request"
-                hx-swap="innerHTML"
-            >
-                <div class="input-group mb-3">
-                    <input
-                        type="text"
-                        name="url"
-                        class="form-control"
-                        placeholder="Enter URL"
-                        required
-                    />
+    <body class="bg-dark">
+        <div class="container centered-form">
+            <div id="banner" class="mb-5">
+                <h2 class="text-light">&nbsp;</h2>
+                <p class="text-light"><em>Make your links shorter</em></p>
+            </div>
+            <div class="form-container">
+                <form
+                    class="mb-3"
+                    hx-post="/shorten"
+                    hx-target="#result"
+                    hx-target-429="#too-many-request"
+                    hx-swap="innerHTML"
+                >
+                    <div class="input-group mb-3">
+                        <input
+                            type="text"
+                            name="url"
+                            class="form-control"
+                            placeholder="Enter URL"
+                            required
+                        />
+                    </div>
                     <button type="submit" class="btn btn-success">
                         Shorten
                     </button>
+                </form>
+                <!-- Reserve space for the alerts and results -->
+                <div class="alert-container">
+                    <div id="result" class="alert alert-dark d-none"></div>
+                    <div
+                        id="too-many-request"
+                        class="alert alert-danger d-none"
+                        role="alert"
+                    >
+                        <h4 class="alert-heading">Ops!</h4>
+                        <p id="too-many-request-message"></p>
+                    </div>
+                    <div id="tooltip" class="alert alert-success d-none">
+                        Copied to clipboard!
+                    </div>
+                    <div id="not-found" class="alert alert-danger d-none">
+                        URL not found!
+                    </div>
                 </div>
-            </form>
-            <div id="result" class="alert alert-dark d-none"></div>
-            <div
-                id="too-many-request"
-                class="alert alert-danger d-none"
-                role="alert"
-            >
-                <h4 class="alert-heading">Ops!</h4>
-                <p id="too-many-request-message"></p>
-            </div>
-            <div id="tooltip" class="alert alert-success d-none">
-                Copied to clipboard!
-            </div>
-            <div id="not-found" class="alert alert-danger d-none">
-                URL not found!
             </div>
         </div>
         <script src="https://unpkg.com/htmx.org"></script>

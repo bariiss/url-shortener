@@ -75,6 +75,6 @@ document.body.addEventListener("htmx:load", function (event) {
     const domain = url.hostname;
 
     var banner = document.getElementById("banner");
-    banner.innerHTML = `<h2 class="text-light">${domain}</h2><p class="text-light">Make your links shorter</p>`;
+    banner.innerHTML = `<h2 class="text-light">${domain}</h2><p class="text-light"><em>Make your links shorter</em></p>`;
     b
 });
