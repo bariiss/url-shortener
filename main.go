@@ -6,8 +6,8 @@ import (
 
 func main() {
 	i.LoadEnv()
-    i.InitMem()
+	i.InitMem()
 
-    config := i.SetAppConfig()
-    i.StartServer(config)
+	config := i.SetAppConfig()
+	i.StartServer(config)
 }

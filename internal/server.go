@@ -18,16 +18,14 @@ type AppConfig struct {
 	Expiration  time.Duration
 }
 
-var (
-	engine *html.Engine
-)
+var engine *html.Engine
 
 func SetAppConfig() *AppConfig {
 	return &AppConfig{
 		Port:        appPort,
 		Engine:      initTemplateEngine(),
 		MaxRequests: maxRequests,
-		Expiration: time.Duration(expiration),
+		Expiration:  time.Duration(expiration),
 	}
 }
 
@@ -54,7 +52,7 @@ func initTemplateEngine() *html.Engine {
 
 func initFiberApp(config *AppConfig) *fiber.App {
 	app := fiber.New(fiber.Config{
-		Views: config.Engine,
+		Views:       config.Engine,
 		ProxyHeader: fiber.HeaderXForwardedFor,
 	})
 

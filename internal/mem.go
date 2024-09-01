@@ -2,14 +2,12 @@ package internal
 
 import (
 	"fmt"
-    "log"
+	"log"
 
-    "github.com/redis/go-redis/v9"
+	"github.com/redis/go-redis/v9"
 )
 
-var (
-    rdb           *redis.Client
-)
+var rdb *redis.Client
 
 func InitMem() {
 	if redisActive {
@@ -67,7 +65,6 @@ func setURL(shortURL, originalURL string) error {
 		shortURL = generateShortURL()
 	}
 }
-
 
 func getURL(shortURL string) (string, error) {
 	if redisActive {
