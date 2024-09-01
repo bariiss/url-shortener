@@ -2,19 +2,16 @@ package internal
 
 import (
     "log"
-    "os"
 
     "github.com/redis/go-redis/v9"
 )
 
 var (
     rdb           *redis.Client
-    redisActive   bool
 )
 
 func InitRedis() {
     if redisActive {
-        redisAddr := os.Getenv("REDIS_ADDR")
         rdb = redis.NewClient(&redis.Options{
             Addr: redisAddr,
         })

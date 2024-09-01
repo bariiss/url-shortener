@@ -7,6 +7,10 @@ import (
     "github.com/gofiber/fiber/v2"
 )
 
+func indexHandler(c *fiber.Ctx) error {
+    return c.Render("index", nil)
+}
+
 func shortenHandler(c *fiber.Ctx) error {
     originalURL := c.FormValue("url")
     shortURL := generateShortURL()

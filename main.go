@@ -5,12 +5,10 @@ import (
 )
 
 func main() {
-    i.ShowWelcomeMessage()
     i.LoadEnv()
     i.InitRedis()
 
-    engine := i.InitTemplateEngine()
-    app := i.InitFiberApp(engine)
+    app := i.InitFiberApp()
 
     i.StartServer(app)
 }

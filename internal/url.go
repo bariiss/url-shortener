@@ -9,8 +9,6 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
 var (
 	mu            sync.RWMutex
 	memoryStorage map[string]string

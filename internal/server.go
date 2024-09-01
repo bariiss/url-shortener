@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +10,15 @@ import (
 	"github.com/gofiber/template/html/v2"
 )
 
-func ShowWelcomeMessage() {
+var (
+	engine *html.Engine
+)
+
+func init() {
+	engine = initTemplateEngine()
+}
+
+func showWelcomeMessage() {
     fmt.Println(`
     ====================================
     Welcome to the URL Shortener Service
@@ -20,16 +27,16 @@ func ShowWelcomeMessage() {
 }
 
 func StartServer(app *fiber.App) {
-    appPort := os.Getenv("APP_PORT")
+	showWelcomeMessage()
     log.Printf("Starting server on :%s", appPort)
     log.Fatal(app.Listen(fmt.Sprintf(":%s", appPort)))
 }
 
-func InitTemplateEngine() *html.Engine {
+func initTemplateEngine() *html.Engine {
     return html.New("./templates", ".html")
 }
 
-func InitFiberApp(engine *html.Engine) *fiber.App {
+func InitFiberApp() *fiber.App {
     app := fiber.New(fiber.Config{
         Views: engine,
     })
@@ -50,8 +57,4 @@ func InitFiberApp(engine *html.Engine) *fiber.App {
     app.Static("/static", "./static")
 
     return app
-}
-
-func indexHandler(c *fiber.Ctx) error {
-    return c.Render("index", nil)
 }
