@@ -55,6 +55,7 @@ func initTemplateEngine() *html.Engine {
 func initFiberApp(config *AppConfig) *fiber.App {
 	app := fiber.New(fiber.Config{
 		Views: config.Engine,
+		ProxyHeader: fiber.HeaderXForwardedFor,
 	})
 
 	app.Post("/shorten", limiter.New(limiter.Config{
