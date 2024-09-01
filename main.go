@@ -1,12 +1,16 @@
 package main
 
+import (
+	i "github.com/bariiss/url-shortener/internal"
+)
+
 func main() {
-    showWelcomeMessage()
-    loadEnv()
-    initRedis()
+    i.ShowWelcomeMessage()
+    i.LoadEnv()
+    i.InitRedis()
 
-    engine := initTemplateEngine()
-    app := initFiberApp(engine)
+    engine := i.InitTemplateEngine()
+    app := i.InitFiberApp(engine)
 
-    startServer(app)
+    i.StartServer(app)
 }
