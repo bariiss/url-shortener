@@ -61,10 +61,10 @@ func initFiberApp(config *AppConfig) *fiber.App {
 		Max:        config.MaxRequests,
 		Expiration: 60 * time.Second,
 		KeyGenerator: func(c *fiber.Ctx) string {
-			return c.IP()
+			return getClientIP(c)
 		},
 		LimitReached: func(c *fiber.Ctx) error {
-			clientIP := c.IP()
+			clientIP := getClientIP(c)
 			message := fmt.Sprintf(`
 				<div>Too many requests from IP: <strong>%s</strong>. Please try again later.</div>
 			`, clientIP)
@@ -123,4 +123,13 @@ func redirectHandler(c *fiber.Ctx) error {
 	}
 	log.Printf("Redirecting %s to %s", shortURL, originalURL)
 	return c.Redirect(originalURL, fiber.StatusSeeOther)
+}
+
+func getClientIP(c *fiber.Ctx) string {
+	clientIP := c.Get("X-Forwarded-For")
+	if clientIP != "" {
+		return strings.Split(clientIP, ",")[0]
+	}
+
+	return c.IP()
 }

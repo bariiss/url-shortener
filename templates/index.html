@@ -45,10 +45,7 @@
                 role="alert"
             >
                 <h4 class="alert-heading">Ops!</h4>
-                <p id="too-many-request-message">
-                    Too many requests have been made from your IP address.
-                    Please try again later.
-                </p>
+                <p id="too-many-request-message"></p>
             </div>
             <div id="tooltip" class="alert alert-success d-none">
                 Copied to clipboard!
@@ -99,7 +96,10 @@
                     hideAlert("not-found");
 
                     if (event.detail.xhr.status === 404) {
-                        showAlert("not-found");
+                        showAlert(
+                          "not-found",
+                          event.detail.xhr.responseText
+                        );
                     } else if (event.detail.xhr.status === 429) {
                         showAlert(
                             "too-many-request",
@@ -108,7 +108,6 @@
                     } else if (event.detail.xhr.status === 200) {
                         showAlert("result");
                     } else if (event.detail.xhr.status === 0) {
-                        // Handle network errors or unreachable API
                         showAlert(
                             "not-found",
                             "Endpoint could not be reached. Please try again later.",
