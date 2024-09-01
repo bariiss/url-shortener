@@ -4,11 +4,13 @@ import (
 	i "github.com/bariiss/url-shortener/internal"
 )
 
+func init() {
+	i.LoadEnv()
+}
+
 func main() {
-    i.LoadEnv()
-    i.InitRedis()
+    i.InitMem()
 
-    app := i.InitFiberApp()
-
-    i.StartServer(app)
+    config := i.SetAppConfig()
+    i.StartServer(config)
 }
