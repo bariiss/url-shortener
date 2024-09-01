@@ -11,8 +11,10 @@ import (
 )
 
 type AppConfig struct {
-	Port   string
-	Engine *html.Engine
+	Port        string
+	Engine      *html.Engine
+	MaxRequests int
+	Expiration  int
 }
 
 var (
@@ -21,8 +23,10 @@ var (
 
 func SetAppConfig() *AppConfig {
 	return &AppConfig{
-		Port:   appPort,
-		Engine: initTemplateEngine(),
+		Port:        appPort,
+		Engine:      initTemplateEngine(),
+		MaxRequests: maxRequests,
+		Expiration: expiration,
 	}
 }
 
@@ -36,7 +40,7 @@ func StartServer(config *AppConfig) {
 }
 
 func showWelcomeMessage() {
-    fmt.Println(`
+	fmt.Println(`
     ====================================
     Welcome to the URL Shortener Service
     ====================================
@@ -44,7 +48,7 @@ func showWelcomeMessage() {
 }
 
 func initTemplateEngine() *html.Engine {
-    return html.New("./templates", ".html")
+	return html.New("./templates", ".html")
 }
 
 func initFiberApp(config *AppConfig) *fiber.App {
@@ -53,7 +57,7 @@ func initFiberApp(config *AppConfig) *fiber.App {
 	})
 
 	app.Post("/shorten", limiter.New(limiter.Config{
-		Max:        100,
+		Max:        config.MaxRequests,
 		Expiration: 60 * time.Second,
 		KeyGenerator: func(c *fiber.Ctx) string {
 			return c.IP()
@@ -71,39 +75,39 @@ func initFiberApp(config *AppConfig) *fiber.App {
 }
 
 func indexHandler(c *fiber.Ctx) error {
-    return c.Render("index", nil)
+	return c.Render("index", nil)
 }
 
 func shortenHandler(c *fiber.Ctx) error {
-    originalURL := c.FormValue("url")
-    shortURL := generateShortURL()
+	originalURL := c.FormValue("url")
+	shortURL := generateShortURL()
 
-    err := setURL(shortURL, originalURL)
-    if err != nil {
-        log.Printf("Error storing URL: %v", err)
-        return c.Status(fiber.StatusInternalServerError).SendString("Error storing URL")
-    }
+	err := setURL(shortURL, originalURL)
+	if err != nil {
+		log.Printf("Error storing URL: %v", err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error storing URL")
+	}
 
-    fullShortURL := fmt.Sprintf("%s/r/%s", c.BaseURL(), shortURL)
-    log.Printf("Stored URL: %s -> %s", shortURL, originalURL)
-    response := fmt.Sprintf(`
+	fullShortURL := fmt.Sprintf("%s/r/%s", c.BaseURL(), shortURL)
+	log.Printf("Stored URL: %s -> %s", shortURL, originalURL)
+	response := fmt.Sprintf(`
         <p>Shortened URL: <a href="%s" target="_blank">%s</a>
         <span class="copy-icon" onclick="copyToClipboard('%s')">📋</span></p>
     `, fullShortURL, fullShortURL, fullShortURL)
-    return c.SendString(response)
+	return c.SendString(response)
 }
 
 func redirectHandler(c *fiber.Ctx) error {
-    shortURL := c.Params("shortURL")
-    originalURL, err := getURL(shortURL)
-    if err != nil {
-        log.Printf("Error retrieving URL for %s: %v", shortURL, err)
-        return c.Status(fiber.StatusInternalServerError).SendString("Error retrieving URL")
-    }
-    if originalURL == "" {
-        log.Printf("URL not found for %s", shortURL)
-        return c.Status(fiber.StatusNotFound).SendString("URL not found")
-    }
-    log.Printf("Redirecting %s to %s", shortURL, originalURL)
-    return c.Redirect(originalURL, fiber.StatusSeeOther)
+	shortURL := c.Params("shortURL")
+	originalURL, err := getURL(shortURL)
+	if err != nil {
+		log.Printf("Error retrieving URL for %s: %v", shortURL, err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error retrieving URL")
+	}
+	if originalURL == "" {
+		log.Printf("URL not found for %s", shortURL)
+		return c.Status(fiber.StatusNotFound).SendString("URL not found")
+	}
+	log.Printf("Redirecting %s to %s", shortURL, originalURL)
+	return c.Redirect(originalURL, fiber.StatusSeeOther)
 }
