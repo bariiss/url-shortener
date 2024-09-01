@@ -59,7 +59,7 @@ func initFiberApp(config *AppConfig) *fiber.App {
 			return c.IP()
 		},
 		LimitReached: func(c *fiber.Ctx) error {
-			return c.Status(fiber.StatusTooManyRequests).SendString("<p>Too many requests. Please try again later.</p>")
+			return c.SendString("<p>Too many requests. Please try again later.</p>")
 		},
 	}), shortenHandler)
 
