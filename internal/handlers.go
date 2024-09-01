@@ -7,9 +7,6 @@ import (
     "github.com/gofiber/fiber/v2"
 )
 
-var (
-)
-
 func shortenHandler(c *fiber.Ctx) error {
     originalURL := c.FormValue("url")
     shortURL := generateShortURL()
@@ -28,7 +25,6 @@ func shortenHandler(c *fiber.Ctx) error {
     `, fullShortURL, fullShortURL, fullShortURL)
     return c.SendString(response)
 }
-
 
 func redirectHandler(c *fiber.Ctx) error {
     shortURL := c.Params("shortURL")
