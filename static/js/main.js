@@ -59,6 +59,9 @@ document.body.addEventListener(
                 "not-found",
                 "Endpoint could not be reached. Please try again later.",
             );
+            setTimeout(function () {
+                hideAlert("not-found");
+            }, 5000);
         }
     },
 );
