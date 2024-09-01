@@ -10,14 +10,14 @@ import (
 	"github.com/gofiber/template/html/v2"
 )
 
-var (
-	engine *html.Engine
-)
-
 type AppConfig struct {
 	Port   string
 	Engine *html.Engine
 }
+
+var (
+	engine *html.Engine
+)
 
 func SetAppConfig() *AppConfig {
 	return &AppConfig{
@@ -53,7 +53,7 @@ func initFiberApp(config *AppConfig) *fiber.App {
 	})
 
 	app.Post("/shorten", limiter.New(limiter.Config{
-		Max:        5,
+		Max:        100,
 		Expiration: 60 * time.Second,
 		KeyGenerator: func(c *fiber.Ctx) string {
 			return c.IP()
