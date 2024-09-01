@@ -66,9 +66,7 @@ func initFiberApp(config *AppConfig) *fiber.App {
 		},
 		LimitReached: func(c *fiber.Ctx) error {
 			clientIP := getClientIP(c)
-			message := fmt.Sprintf(`
-				<div>Too many requests from IP: <strong>%s</strong>. Please try again later.</div>
-			`, clientIP)
+			message := fmt.Sprintf(`Too many requests from IP: <strong>%s</strong>.`, clientIP)
 			return c.Status(fiber.StatusTooManyRequests).SendString(message)
 		},
 	}), shortenHandler)

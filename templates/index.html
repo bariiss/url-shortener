@@ -96,15 +96,20 @@
                     hideAlert("not-found");
 
                     if (event.detail.xhr.status === 404) {
-                        showAlert(
-                          "not-found",
-                          event.detail.xhr.responseText
-                        );
+                        showAlert("not-found", event.detail.xhr.responseText);
                     } else if (event.detail.xhr.status === 429) {
+                        var retryAfter = event.detail.xhr.getResponseHeader("Retry-After");
+                        var message = "";
+                        if (retryAfter) {
+                            message = ` Try again after <strong>${retryAfter}</strong> seconds.`;
+                        }
                         showAlert(
                             "too-many-request",
-                            event.detail.xhr.responseText,
+                            "<div>" +event.detail.xhr.responseText + message + "</div>",
                         );
+                        setTimeout(function () {
+                            hideAlert("too-many-request");
+                        }, retryAfter * 1000);
                     } else if (event.detail.xhr.status === 200) {
                         showAlert("result");
                     } else if (event.detail.xhr.status === 0) {
