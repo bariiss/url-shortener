@@ -2,3 +2,10 @@
     cursor: pointer;
     vertical-align: top;
 }
+#banner {
+    height: 100px; /* Adjust the height as necessary */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

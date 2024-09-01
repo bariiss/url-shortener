@@ -12,12 +12,7 @@
     </head>
     <body class="text-center bg-dark">
         <div class="container mt-5">
-            <img
-                src="/static/img/bozkurt.png"
-                alt="Bozkurt Logo"
-                class="img-fluid mb-4"
-                style="max-width: 10%"
-            />
+            <div id="banner" class="mb-5"></div>
             <form
                 class="mb-3"
                 hx-post="/shorten"
@@ -125,6 +120,16 @@
                 if (event.detail.target.id === "result") {
                     showAlert("result");
                 }
+            });
+
+            document.body.addEventListener("htmx:load", function (event) {
+                var domainUrl = window.location.origin;
+                const url = new URL(domainUrl);
+                const domain = url.hostname;
+
+                var banner = document.getElementById("banner");
+                banner.innerHTML = `<h2 class="text-light">${domain}</h2><p class="text-light">Make your links shorter</p>`;
+                b
             });
         </script>
     </body>
