@@ -31,10 +31,19 @@ func LoadEnv() {
 	if err != nil {
 		log.Fatalf("Invalid MAX_REQUESTS value: %v", err)
 	}
-	_ = maxRequests
 
 	expiration, err = strconv.Atoi(os.Getenv("EXPIRATION"))
 	if err != nil {
 		log.Fatalf("Invalid EXPIRATION value: %v", err)
 	}
+
+	log.Println("----------------------")
+	log.Println("Environment Variables")
+	log.Println("----------------------")
+	log.Println("REDIS_ACTIVE:", redisActive)
+	log.Println("APP_PORT:", appPort)
+	log.Println("REDIS_ADDR:", redisAddr)
+	log.Println("MAX_REQUESTS:", maxRequests)
+	log.Println("EXPIRATION:", expiration)
+	log.Println("----------------------")
 }
