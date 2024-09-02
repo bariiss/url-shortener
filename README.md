@@ -40,7 +40,6 @@ Dockerfile
 .gitignore
 .dockerignore
 .git
-redisdata/
 ```
 
 This prevents unnecessary files from being included in the Docker build context.
