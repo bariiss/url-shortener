@@ -43,7 +43,7 @@ p {
 }
 
 .form-container {
-    max-width: 500px;
+    max-width: 600px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -63,14 +63,14 @@ p {
     position: absolute;
     bottom: 0;
     width: 100%;
-    text-align: center;
+    text-align: right;
     padding: 10px 0;
-    background-color: #222;
+    padding-right: 10px;
 }
 
 .footer img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     vertical-align: middle;
 }
 
