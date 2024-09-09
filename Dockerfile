@@ -1,4 +1,4 @@
-FROM ghcr.io/bariiss/golang-upx:1.23.0-bookworm AS build
+FROM ghcr.io/konamata/golang-upx:1.23.1-bookworm AS build
 
 WORKDIR /app
 
